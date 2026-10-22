@@ -1,8 +1,9 @@
 import {CLASS_IDS} from './catalog.js';
 import {correct} from './core.js';
+import {DEFAULT_REFERENCE_TOPIC, validReferenceTopic} from './reference-data.js';
 
 export const VIEW_KEY = 'huhao-radio:view:v1';
-export const TABS = ['study','exam','wrong','profile'];
+export const TABS = ['study','exam','wrong','reference','profile'];
 
 export function loadView() {
   try {
@@ -28,7 +29,9 @@ export function saveView(view) {
 export function restoreView(view, state, bankMap) {
   if (!view || view.classId !== state.classId) return null;
   const restored = {tab:view.tab, screen:view.screen, sessionKind:null, result:null, review:null,
-    wrongSearch:view.wrongSearch, scrollY:view.scrollY};
+    wrongSearch:view.wrongSearch, scrollY:view.scrollY,
+    referenceTopic:validReferenceTopic(view.referenceTopic) ? view.referenceTopic : DEFAULT_REFERENCE_TOPIC,
+    referenceSearch:typeof view.referenceSearch==='string' ? view.referenceSearch : ''};
   if (view.screen === 'home') return restored;
   if (view.screen === 'quiz' && ['practice','exam'].includes(view.sessionKind)) {
     if (!state[view.sessionKind] || state[view.sessionKind].id !== view.sessionId) return null;

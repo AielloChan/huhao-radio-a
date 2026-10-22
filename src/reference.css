@@ -1,0 +1,28 @@
+.reference-mark{display:grid;place-items:center;width:52px;height:58px;flex-shrink:0;border:1px solid #bbc6af;border-radius:10px;background:#e9eedf;color:var(--green);transform:rotate(4deg)}
+.reference-mark .icon{width:27px;height:27px}
+.reference-tools{margin-bottom:20px}.reference-tools .search{display:block}
+.reference-topics{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 8px}
+.reference-topic{min-height:44px;padding:10px 13px;border:1px solid var(--line);border-radius:10px;background:var(--white);color:#67745f;font-size:12px}
+.reference-topic[aria-pressed=true]{color:#f5f4e9;background:var(--green);border-color:var(--green)}
+.reference-count{font-size:11px;color:var(--muted);min-height:20px;margin-top:10px}
+.reference-sheet{border:1px solid var(--line);border-radius:16px;background:var(--white);padding:23px;margin:0 0 18px;overflow:hidden}
+.reference-sheet-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.reference-sheet-heading span{white-space:nowrap;font-size:11px;color:var(--muted)}
+.reference-intro{font-size:12px;color:#737f6c;margin:10px 0 20px}
+.reference-table{border-collapse:collapse;width:100%;table-layout:fixed;font-size:13px;text-align:left;line-height:1.7;overflow-wrap:anywhere}
+.reference-table th,.reference-table td{padding:13px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+.reference-table thead th{color:#728066;background:#edf0e5;font-size:11px;font-weight:500}
+.reference-table tbody th{font-weight:600;color:var(--green)}
+.reference-table th:first-child{padding-left:12px}.reference-table th:last-child,.reference-table td:last-child{padding-right:12px}
+.reference-table-amateur th:first-child{width:24%}.reference-table-amateur th:nth-child(2){width:57%}.reference-table-amateur th:nth-child(3){width:19%}
+.reference-table-regions th:first-child,.reference-table-alphabet th:first-child,.reference-table-morse th:first-child{width:25%}
+.reference-table-provinces th:first-child{width:44%}.reference-table-provinces th:nth-child(2){width:23%}
+.reference-table-shorthand th:first-child{width:25%}.reference-table-shorthand th:nth-child(2){width:39%}
+.reference-table .has-note>*{border-bottom:0;padding-bottom:4px}
+.reference-table .reference-row-note td{font-size:10px;line-height:1.8;padding-top:0;color:#7a826f}
+.reference-group th{background:#f3f4ec;font-size:11px;letter-spacing:2px;padding-top:16px!important}
+.morse-signal{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:21px;font-weight:650;letter-spacing:4px;white-space:nowrap;color:var(--green)}
+.reference-notes{margin-top:17px;display:grid;gap:9px;font-size:11px;color:#7d826f;line-height:1.8}
+.reference-sources{border-top:1px dashed var(--line);margin-top:18px;padding-top:14px;font-size:11px;color:#718066;line-height:1.9}
+.reference-sources summary{cursor:pointer;min-height:32px}.reference-sources ul{margin:8px 0 12px;padding-left:18px}.reference-sources li{margin:7px 0}.reference-sources a{text-decoration:underline;text-underline-offset:3px}.reference-sources p{font-size:10px;color:var(--muted)}
+.reference-entry{display:flex;align-items:center;gap:14px;padding:19px;margin:26px 0;background:#e9edde;border:1px solid #dce3cf;border-radius:14px}.reference-entry>div{flex:1}.reference-entry h3{font-size:14px}.reference-entry p{font-size:11px;color:#7b866e;margin-top:5px}.reference-entry>.icon:last-child{width:17px}
+@media(max-width:680px){.bottom-nav a{min-width:0;flex:1;min-height:44px}.reference-sheet{padding:17px 12px;border-radius:14px}.reference-sheet-heading h2{font-size:16px}.reference-intro{font-size:11px}.reference-table{font-size:12px}.reference-table th,.reference-table td{padding:12px 6px}.reference-table thead th{font-size:10px}.reference-table th:first-child{padding-left:7px}.reference-table th:last-child,.reference-table td:last-child{padding-right:7px}.reference-topic{font-size:11px;padding:9px 11px}.reference-topics{gap:7px}.reference-table-shorthand th:first-child{width:26%}.reference-table-shorthand th:nth-child(2){width:38%}.morse-signal{font-size:20px;letter-spacing:3px}.reference-entry{padding:17px}.reference-entry p{font-size:10px}}

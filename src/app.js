@@ -6,6 +6,8 @@ import {escape as e, button, icon, showDialog, closeDialog} from './ui.js';
 import {setupPwa, checkUpdate, offlineReady, appVersion} from './pwa.js';
 import {TABS, loadView, saveView, restoreView} from './view-state.js';
 import {setupMotion} from './motion.js';
+import {referenceView} from './reference.js';
+import {DEFAULT_REFERENCE_TOPIC, validReferenceTopic} from './reference-data.js';
 import './press-feedback.js';
 
 const root = document.querySelector('#app');
@@ -17,6 +19,8 @@ let sessionKind = null;
 let result = null;
 let review = null;
 let wrongSearch = '';
+let referenceTopic = DEFAULT_REFERENCE_TOPIC;
+let referenceSearch = '';
 let saveBlocked = false;
 let storageMessage = '';
 let toastTimer;
@@ -77,7 +81,7 @@ function persistView() {
   const saved = saveView({classId:bank.classId, tab, screen, sessionKind:review ? null : sessionKind,
     sessionId:currentSession()?.id ?? null, resultId:result?.id ?? null,
     reviewMode:review ? (review.ids.length === result.ids.length ? 'all' : 'errors') : null,
-    reviewIndex:review?.index ?? null, wrongSearch, scrollY:pendingScroll ?? scrollPosition()});
+    reviewIndex:review?.index ?? null, wrongSearch, referenceTopic, referenceSearch, scrollY:pendingScroll ?? scrollPosition()});
   if (!saved && !viewSaveFailed) toast('当前无法保存页面位置，下次打开可能回到首页。学习记录可在「我的」中导出备份。');
   viewSaveFailed = !saved;
 }
@@ -108,7 +112,7 @@ function render() {
   else if (screen === 'result' && result) body = resultView(result,bankMap);
   else {
     screen = 'home';
-    body = tab === 'exam' ? examView(state,bank.classId) : tab === 'wrong' ? wrongView(state,bank,wrongSearch) : tab === 'profile' ? profileView(state,bank,status) : studyView(state,bank);
+    body = tab === 'exam' ? examView(state,bank.classId) : tab === 'wrong' ? wrongView(state,bank,wrongSearch) : tab === 'reference' ? referenceView(referenceTopic,referenceSearch) : tab === 'profile' ? profileView(state,bank,status) : studyView(state,bank);
   }
   document.body.classList.toggle('is-quizzing',screen==='quiz');
   root.innerHTML = shell(tab, `${storageMessage ? `<div class="storage-warning" role="alert">${e(storageMessage)} ${saveBlocked ? button('下载原始记录','export-raw','text-button') : ''}</div>` : ''}${body}`,status,screen==='quiz');
@@ -128,7 +132,7 @@ function render() {
     });
   }
   const session = screen === 'quiz' ? currentSession() : null;
-  motion.afterRender({page:`${bank.classId}:${tab}:${screen}:${session?.id ?? result?.id ?? ''}:${review ? 'review' : sessionKind ?? ''}`,
+  motion.afterRender({page:`${bank.classId}:${tab}:${screen}:${session?.id ?? result?.id ?? ''}:${review ? 'review' : sessionKind ?? ''}:${tab==='reference' ? referenceTopic : ''}`,
     tab, screen, index:session?.index ?? 0, question:session?.ids[session.index] ?? null,
     selection:session ? [...(session.answers[session.ids[session.index]] || [])].sort().join(',') : '',
     checked:session ? !!(review || session.checked[session.ids[session.index]]) : false});
@@ -196,6 +200,10 @@ function exportState() { download(`呼号之前-${bank.classId}类-学习备份-
 
 const actions = {
   'switch-class': switchClass,
+  'reference-topic': id => {
+    if (!validReferenceTopic(id)) return;
+    referenceTopic=id;referenceSearch='';render();top();
+  },
   sequence: () => launchPractice('sequence'),
   random: () => launchPractice('random'),
   chapter: id => launchPractice('chapter',bank.questions.filter(q=>q.chapter.startsWith(`${id}.`))),
@@ -268,13 +276,19 @@ document.addEventListener('click', event => {
   if (target && !target.disabled) actions[target.dataset.action]?.(target.dataset.id);
 });
 document.addEventListener('input', event => {
+  if (event.isComposing && event.target.id==='reference-search') return;
   pendingScroll = null;
-  if(event.target.id==='wrong-search') {
-    wrongSearch=event.target.value;
+  if(['wrong-search','reference-search'].includes(event.target.id)) {
+    const id=event.target.id;
+    if(id==='wrong-search')wrongSearch=event.target.value;
+    else referenceSearch=event.target.value;
     const cursor=event.target.selectionStart;
-    render();const input=document.querySelector('#wrong-search');input.focus();
+    render();const input=document.getElementById(id);input.focus({preventScroll:true});
     try{input.setSelectionRange(cursor,cursor);}catch{}
   }
+});
+document.addEventListener('compositionend',event=>{
+  if (event.target.id==='reference-search') event.target.dispatchEvent(new Event('input',{bubbles:true}));
 });
 document.addEventListener('change', async event => {
   if(event.target.id!=='import-file')return;
@@ -322,7 +336,7 @@ async function init() {
     const shouldRestore = !explicitClass && !saveBlocked && savedView && (!requestedTab || requestedTab === savedView.tab);
     const restored = shouldRestore ? restoreView(savedView,state,bankMap) : null;
     if (restored) {
-      ({tab,screen,sessionKind,result,review,wrongSearch} = restored);
+      ({tab,screen,sessionKind,result,review,wrongSearch,referenceTopic,referenceSearch} = restored);
       pendingScroll = restored.scrollY;
       render();
     } else navigate(!shouldRestore && (explicitClass || savedView !== null) && TABS.includes(requestedTab) ? requestedTab : 'study');

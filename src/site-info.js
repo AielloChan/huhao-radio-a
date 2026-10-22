@@ -9,7 +9,7 @@ const resources = [
 ];
 
 export function resourceLinks() {
-  return `<section class="resources" aria-labelledby="resources-title"><div class="section-title"><h2 id="resources-title">常用链接</h2><span>从练习，到正式出发</span></div><div class="resource-grid">${resources.map(({title,detail,url})=>`<a class="resource-link" href="${e(url)}" target="_blank" rel="noopener noreferrer"><div><h3>${e(title)}</h3><p>${e(detail)}</p></div><span aria-hidden="true">↗</span></a>`).join('')}</div><p class="fineprint">外部网站需联网访问，报名安排以考核机构通知为准。</p></section>${discoveryLinks()}`;
+  return `<a class="reference-entry" href="#reference">${icon('list')}<div><h3>电台速查手册</h3><p>频段、呼号分区、通联简语与电码 · 离线可查</p></div>${icon('chevron')}</a><section class="resources" aria-labelledby="resources-title"><div class="section-title"><h2 id="resources-title">常用链接</h2><span>从练习，到正式出发</span></div><div class="resource-grid">${resources.map(({title,detail,url})=>`<a class="resource-link" href="${e(url)}" target="_blank" rel="noopener noreferrer"><div><h3>${e(title)}</h3><p>${e(detail)}</p></div><span aria-hidden="true">↗</span></a>`).join('')}</div><p class="fineprint">外部网站需联网访问，报名安排以考核机构通知为准。</p></section>${discoveryLinks()}`;
 }
 
 export function siteFooter(version) {
