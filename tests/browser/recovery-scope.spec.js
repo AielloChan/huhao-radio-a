@@ -24,8 +24,9 @@ test.beforeAll(async()=>{
         ? new URL('../../recovery-dist/index.html',import.meta.url)
         : new URL('../../dist/'+url.pathname.slice('/huhao-radio/'.length)+(url.pathname.endsWith('/')?'index.html':''),import.meta.url);
       const type=file.pathname.endsWith('.js')?'text/javascript':file.pathname.endsWith('.css')?'text/css':file.pathname.endsWith('.json')?'application/json':file.pathname.endsWith('.png')?'image/png':'text/html';
+      const data=await readFile(file);
       res.writeHead(200,{'Content-Type':type,'Cache-Control':'no-store'});
-      res.end(await readFile(file));
+      res.end(data);
     } catch {res.writeHead(404);res.end('Not found');}
   });
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));

@@ -2,6 +2,7 @@ import {resourceLinks, siteFooter} from './site-info.js';
 import {CHAPTERS, correct, progress, remainingSeconds} from './core.js';
 import {CLASS_IDS, classConfig} from './catalog.js';
 import {escape as e, icon, button, empty, dateLabel} from './ui.js';
+import {aiHelpView} from './ai-help.js';
 const labelFor = mode => ({sequence:'顺序刷题', random:'随机刷题', wrong:'错题复习', chapter:'章节练习', exam:'模拟考试'}[mode]);
 
 export function shell(tab, body, status, compact = false) {
@@ -58,7 +59,7 @@ export function quizView(session, bankMap, review = false) {
     const right = revealed && q.answers.includes(id);
     const wrong = revealed && chosen && !right;
     return `<button class="option ${chosen ? 'selected' : ''} ${right ? 'correct' : ''} ${wrong ? 'incorrect' : ''}" data-action="select" data-id="${id}" aria-pressed="${chosen}" ${revealed ? 'disabled' : ''}><span class="option-letter">${String.fromCharCode(65+index)}</span><span>${e(option.text)}</span>${right ? icon('check') : wrong ? icon('close') : chosen ? '<span class="selected-dot"></span>' : ''}</button>`;
-  }).join('')}</div>${revealed ? `<div class="answer-feedback ${matched ? 'success' : 'error'}"><strong>${icon(matched ? 'check' : 'close')}${matched ? '回答正确，继续保持！' : selected.length ? '这道题，再记住一次。' : '这道题未作答。'}</strong><p>正确答案：<b>${letters(q.answers)}</b>${!matched ? ` <span>你的答案：${selected.length ? letters(selected) : '未作答'}</span>` : ''}</p><small>答案来自原题库${!matched && !review ? ' · 已加入错题本' : ''}</small></div>` : ''}</article><p class="fineprint">${isExam ? '答案实时保存 · 交卷前可随时修改' : review ? '选项顺序与考试时一致' : '进度自动保存 · 选项已随机排列'}</p></section><div class="quiz-actions">${button(`${icon('back')} 上一题`,'previous','secondary',session.index===0 ? 'disabled' : '')}${!isExam && !revealed ? button('确认答案','check-answer','primary',!selected.length ? 'disabled' : '') : button(`${session.index===session.ids.length-1 ? (isExam ? '交卷' : review ? '返回结果' : '完成练习') : '下一题'} ${icon('arrow')}`,session.index===session.ids.length-1 ? (isExam ? 'submit-exam' : review ? 'show-result' : 'complete-practice') : 'next')}${isExam && session.index<session.ids.length-1 ? button('交卷','submit-exam','text-button') : ''}</div>`;
+  }).join('')}</div>${revealed ? `<div class="answer-feedback ${matched ? 'success' : 'error'}"><strong>${icon(matched ? 'check' : 'close')}${matched ? '回答正确，继续保持！' : selected.length ? '这道题，再记住一次。' : '这道题未作答。'}</strong><p>正确答案：<b>${letters(q.answers)}</b>${!matched ? ` <span>你的答案：${selected.length ? letters(selected) : '未作答'}</span>` : ''}</p><small>答案来自原题库${!matched && !review ? ' · 已加入错题本' : ''}</small>${!matched ? aiHelpView(q,session) : ''}</div>` : ''}</article><p class="fineprint">${isExam ? '答案实时保存 · 交卷前可随时修改' : review ? '选项顺序与考试时一致' : '进度自动保存 · 选项已随机排列'}</p></section><div class="quiz-actions">${button(`${icon('back')} 上一题`,'previous','secondary',session.index===0 ? 'disabled' : '')}${!isExam && !revealed ? button('确认答案','check-answer','primary',!selected.length ? 'disabled' : '') : button(`${session.index===session.ids.length-1 ? (isExam ? '交卷' : review ? '返回结果' : '完成练习') : '下一题'} ${icon('arrow')}`,session.index===session.ids.length-1 ? (isExam ? 'submit-exam' : review ? 'show-result' : 'complete-practice') : 'next')}${isExam && session.index<session.ids.length-1 ? button('交卷','submit-exam','text-button') : ''}</div>`;
 }
 
 export function resultView(session, bankMap) {
